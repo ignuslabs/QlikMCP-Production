@@ -1,0 +1,230 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-qix-layout-fixtures-v1",
+  "nonProductionOnly": true,
+  "layouts": {
+    "normal-sales-by-region-preview": {
+      "targetAliases": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "objectIdByTarget": {
+        "cloud-dev": "session-object-normal-cloud-001",
+        "windows-dev": "session-object-normal-windows-001"
+      },
+      "objectType": "barchart",
+      "title": "Sales by region",
+      "qInfo": {
+        "type": "barchart",
+        "id": "fixture-normal-sales-by-region"
+      },
+      "qHyperCube": {
+        "qSize": {
+          "qcx": 2,
+          "qcy": 4
+        },
+        "qMode": "S",
+        "qDimensionInfo": [
+          {
+            "qFallbackTitle": "Region",
+            "qCardinal": 4
+          }
+        ],
+        "qMeasureInfo": [
+          {
+            "qFallbackTitle": "Revenue",
+            "qNumFormat": {
+              "qType": "F"
+            }
+          }
+        ],
+        "qDataPages": [
+          {
+            "qMatrix": [
+              [
+                {
+                  "qText": "North",
+                  "qNum": "NaN"
+                },
+                {
+                  "qText": "120000",
+                  "qNum": 120000
+                }
+              ],
+              [
+                {
+                  "qText": "South",
+                  "qNum": "NaN"
+                },
+                {
+                  "qText": "98000",
+                  "qNum": 98000
+                }
+              ],
+              [
+                {
+                  "qText": "East",
+                  "qNum": "NaN"
+                },
+                {
+                  "qText": "87000",
+                  "qNum": 87000
+                }
+              ],
+              [
+                {
+                  "qText": "West",
+                  "qNum": "NaN"
+                },
+                {
+                  "qText": "76000",
+                  "qNum": 76000
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      "bounded": {
+        "returnedRows": 4,
+        "maxRows": 10,
+        "truncated": false,
+        "rawDataIncluded": false
+      }
+    },
+    "high-cardinality-table-preview": {
+      "targetAliases": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "objectType": "table",
+      "title": "Customer revenue",
+      "qInfo": {
+        "type": "table",
+        "id": "fixture-high-cardinality-table"
+      },
+      "qHyperCube": {
+        "qSize": {
+          "qcx": 2,
+          "qcy": 10
+        },
+        "qMode": "S",
+        "qDimensionInfo": [
+          {
+            "qFallbackTitle": "CustomerID",
+            "qCardinal": 10000
+          }
+        ],
+        "qMeasureInfo": [
+          {
+            "qFallbackTitle": "Revenue"
+          }
+        ],
+        "qDataPages": [
+          {
+            "qMatrix": [
+              [
+                {
+                  "qText": "customer-0001"
+                },
+                {
+                  "qText": "1200",
+                  "qNum": 1200
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0002"
+                },
+                {
+                  "qText": "1150",
+                  "qNum": 1150
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0003"
+                },
+                {
+                  "qText": "1100",
+                  "qNum": 1100
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0004"
+                },
+                {
+                  "qText": "1050",
+                  "qNum": 1050
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0005"
+                },
+                {
+                  "qText": "1000",
+                  "qNum": 1000
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0006"
+                },
+                {
+                  "qText": "950",
+                  "qNum": 950
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0007"
+                },
+                {
+                  "qText": "900",
+                  "qNum": 900
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0008"
+                },
+                {
+                  "qText": "850",
+                  "qNum": 850
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0009"
+                },
+                {
+                  "qText": "800",
+                  "qNum": 800
+                }
+              ],
+              [
+                {
+                  "qText": "customer-0010"
+                },
+                {
+                  "qText": "750",
+                  "qNum": 750
+                }
+              ]
+            ],
+            "qRowCount": 10,
+            "continuation": "fixture-continuation-001"
+          }
+        ]
+      },
+      "bounded": {
+        "returnedRows": 10,
+        "maxRows": 10,
+        "truncated": true,
+        "rawDataIncluded": false
+      }
+    }
+  }
+}

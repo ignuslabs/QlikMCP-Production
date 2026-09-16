@@ -1,0 +1,40 @@
+{
+  "projectName": "QlikHarnessAgentCore",
+  "runtimeName": "QlikHarnessMcp",
+  "awsTarget": {
+    "name": "dev",
+    "account": "123456789012",
+    "region": "us-east-1"
+  },
+  "executionRoleArn": "arn:aws:iam::123456789012:role/qlik-ai-harness-agentcore-dev",
+  "stateTableName": "qlik-ai-harness-agentcore-dev",
+  "qlikSecretId": "/qlik-ai-harness/agentcore/dev/qlik-cloud-oauth",
+  "oidc": {
+    "discoveryUrl": "https://identity.example.com/.well-known/openid-configuration",
+    "audience": "qlik-ai-harness-agentcore",
+    "allowedClients": ["replace-with-mcp-client-id"],
+    "allowedScopes": ["qlik.harness.invoke"]
+  },
+  "governance": {
+    "mutationActors": ["replace-with-requester-subject"],
+    "reviewerActors": ["replace-with-reviewer-subject"]
+  },
+  "qlikCloud": {
+    "connectionAlias": "cloud-dev",
+    "tenantHost": "https://tenant.example.qlikcloud.com",
+    "tenantAlias": "replace-with-tenant-alias",
+    "regionAlias": "replace-with-region-alias",
+    "oauthClientId": "replace-with-confidential-oauth-client-id",
+    "environment": "development",
+    "appId": "replace-with-nonproduction-app-id",
+    "sheetId": "replace-with-designated-sheet-id",
+    "readiness": {
+      "approved": false,
+      "expiresAt": "1970-01-01T00:00:00.000Z",
+      "canRead": false,
+      "canPreview": false,
+      "canWriteDesignatedSheet": false,
+      "cleanupVerified": false
+    }
+  }
+}

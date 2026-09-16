@@ -1,0 +1,317 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-logical-catalog-v1",
+  "nonProductionOnly": true,
+  "variantAliases": {
+    "default": "sales-demo-v1",
+    "empty": "empty-catalog-v1"
+  },
+  "catalogs": {
+    "sales-demo-v1": {
+      "catalogId": "sales-demo-v1",
+      "description": "Synthetic sales catalog shared by both target adapters.",
+      "visibilityPolicy": {
+        "includeVisibleMetadata": true,
+        "excludeHiddenMetadata": true,
+        "excludeSensitiveMetadata": true,
+        "excludeLoadScripts": true,
+        "excludeDataConnections": true,
+        "excludeSecurityRules": true
+      },
+      "fields": [
+        {
+          "id": "field-region",
+          "label": "Region",
+          "role": "dimension",
+          "semanticType": "text",
+          "cardinality": {
+            "band": "low",
+            "maxDistinctValues": 5
+          },
+          "visible": true
+        },
+        {
+          "id": "field-order-date",
+          "label": "OrderDate",
+          "role": "dimension",
+          "semanticType": "date",
+          "cardinality": {
+            "band": "medium",
+            "maxDistinctValues": 366
+          },
+          "visible": true
+        },
+        {
+          "id": "field-customer-id",
+          "label": "CustomerID",
+          "role": "dimension",
+          "semanticType": "identifier",
+          "cardinality": {
+            "band": "high",
+            "maxDistinctValues": 10000
+          },
+          "visible": true
+        },
+        {
+          "id": "field-revenue",
+          "label": "Revenue",
+          "role": "measure",
+          "semanticType": "numeric",
+          "cardinality": {
+            "band": "continuous"
+          },
+          "visible": true
+        },
+        {
+          "id": "field-margin",
+          "label": "Margin",
+          "role": "measure",
+          "semanticType": "numeric",
+          "cardinality": {
+            "band": "continuous"
+          },
+          "visible": true
+        },
+        {
+          "id": "field-status-order",
+          "label": "Status",
+          "role": "dimension",
+          "semanticType": "text",
+          "cardinality": {
+            "band": "low",
+            "maxDistinctValues": 4
+          },
+          "visible": true,
+          "qualifiedLabel": "Order.Status"
+        },
+        {
+          "id": "field-status-customer",
+          "label": "Status",
+          "role": "dimension",
+          "semanticType": "text",
+          "cardinality": {
+            "band": "low",
+            "maxDistinctValues": 3
+          },
+          "visible": true,
+          "qualifiedLabel": "Customer.Status"
+        }
+      ],
+      "masterItems": [
+        {
+          "id": "master-region",
+          "label": "Region",
+          "kind": "dimension",
+          "semanticType": "text",
+          "visible": true
+        },
+        {
+          "id": "master-order-date",
+          "label": "Order date",
+          "kind": "dimension",
+          "semanticType": "date",
+          "visible": true
+        },
+        {
+          "id": "master-revenue",
+          "label": "Revenue",
+          "kind": "measure",
+          "semanticType": "numeric",
+          "visible": true
+        },
+        {
+          "id": "master-margin",
+          "label": "Margin",
+          "kind": "measure",
+          "semanticType": "numeric",
+          "visible": true
+        }
+      ],
+      "chartSupport": [
+        {
+          "type": "barchart",
+          "enabled": true,
+          "maxDimensionCardinalityBand": "high",
+          "boundedResultRows": 50
+        },
+        {
+          "type": "linechart",
+          "enabled": true,
+          "requiresSemanticType": "date"
+        },
+        {
+          "type": "scatterplot",
+          "enabled": true,
+          "requiresNumericMeasures": 2
+        },
+        {
+          "type": "table",
+          "enabled": true,
+          "boundedResultRows": 100
+        },
+        {
+          "type": "kpi",
+          "enabled": true,
+          "requiresMeasures": 1
+        },
+        {
+          "type": "gauge",
+          "enabled": true,
+          "requiresTarget": true
+        },
+        {
+          "type": "treemap",
+          "enabled": true,
+          "maxDimensionCardinalityBand": "medium"
+        },
+        {
+          "type": "piechart",
+          "enabled": true,
+          "maxDimensionCardinalityBand": "low"
+        },
+        {
+          "type": "combochart",
+          "enabled": true,
+          "maxDimensionCount": 1
+        }
+      ],
+      "excludedMetadataExamples": [
+        {
+          "id": "field-customer-email",
+          "label": "CustomerEmail",
+          "kind": "field",
+          "classification": "sensitive",
+          "visible": false,
+          "exclusionReason": "sensitive-field-policy"
+        },
+        {
+          "id": "field-internal-tenant-key",
+          "label": "InternalTenantKey",
+          "kind": "field",
+          "classification": "restricted",
+          "visible": false,
+          "exclusionReason": "hidden-metadata-policy"
+        },
+        {
+          "id": "field-load-timestamp",
+          "label": "__LoadTimestamp",
+          "kind": "field",
+          "classification": "internal",
+          "visible": false,
+          "exclusionReason": "hidden-metadata-policy"
+        },
+        {
+          "id": "master-customer-email",
+          "label": "Customer email",
+          "kind": "master-item",
+          "classification": "sensitive",
+          "visible": false,
+          "exclusionReason": "sensitive-master-item-policy"
+        },
+        {
+          "id": "metadata-load-script",
+          "label": "load-script",
+          "kind": "load-script",
+          "classification": "restricted",
+          "visible": false,
+          "exclusionReason": "metadata-type-policy"
+        }
+      ],
+      "excludedResponseProperties": [
+        "rawData",
+        "loadScript",
+        "dataConnections",
+        "securityRules",
+        "qixHandles",
+        "credentials"
+      ]
+    },
+    "empty-catalog-v1": {
+      "catalogId": "empty-catalog-v1",
+      "description": "Synthetic empty catalog used to verify a resolvable no-visible-metadata response.",
+      "visibilityPolicy": {
+        "includeVisibleMetadata": true,
+        "excludeHiddenMetadata": true,
+        "excludeSensitiveMetadata": true,
+        "excludeLoadScripts": true,
+        "excludeDataConnections": true,
+        "excludeSecurityRules": true
+      },
+      "fields": [],
+      "masterItems": [],
+      "sheets": [],
+      "chartSupport": [],
+      "excludedMetadataExamples": [],
+      "excludedResponseProperties": [
+        "rawData",
+        "loadScript",
+        "dataConnections",
+        "securityRules",
+        "qixHandles",
+        "credentials"
+      ]
+    }
+  },
+  "targets": [
+    {
+      "targetId": "target-cloud-dev",
+      "connectionAlias": "cloud-dev",
+      "platform": "cloud",
+      "environment": "development",
+      "catalogRef": "sales-demo-v1",
+      "catalogVariants": {
+        "default": "sales-demo-v1",
+        "empty": "empty-catalog-v1"
+      },
+      "app": {
+        "id": "app-sales-cloud-dev",
+        "alias": "sales-app-cloud-dev",
+        "name": "Synthetic Sales Cloud Development"
+      },
+      "sheets": [
+        {
+          "id": "sheet-sales-overview-cloud-dev",
+          "alias": "sales-overview-cloud-dev",
+          "name": "Sales Overview",
+          "writeAllowed": true
+        },
+        {
+          "id": "sheet-sales-readonly-cloud-dev",
+          "alias": "sales-readonly-cloud-dev",
+          "name": "Sales Read Only",
+          "writeAllowed": false
+        }
+      ]
+    },
+    {
+      "targetId": "target-windows-dev",
+      "connectionAlias": "windows-dev",
+      "platform": "windows",
+      "environment": "development",
+      "catalogRef": "sales-demo-v1",
+      "catalogVariants": {
+        "default": "sales-demo-v1",
+        "empty": "empty-catalog-v1"
+      },
+      "app": {
+        "id": "app-sales-windows-dev",
+        "alias": "sales-app-windows-dev",
+        "name": "Synthetic Sales Windows Development"
+      },
+      "sheets": [
+        {
+          "id": "sheet-sales-overview-windows-dev",
+          "alias": "sales-overview-windows-dev",
+          "name": "Sales Overview",
+          "writeAllowed": true
+        },
+        {
+          "id": "sheet-sales-readonly-windows-dev",
+          "alias": "sales-readonly-windows-dev",
+          "name": "Sales Read Only",
+          "writeAllowed": false
+        }
+      ]
+    }
+  ]
+}

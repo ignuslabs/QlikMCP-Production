@@ -1,0 +1,93 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-chart-plan-fixtures-v1",
+  "nonProductionOnly": true,
+  "compiler": {
+    "name": "fixture-chart-compiler",
+    "version": "fixture-compiler-v1",
+    "hashAlgorithm": "sha256"
+  },
+  "plans": {
+    "normal-sales-by-region-v1": {
+      "planHash": "sha256:fixture-normal-sales-by-region-v1",
+      "catalogId": "sales-demo-v1",
+      "targetAliases": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "intent": {
+        "dimensions": [
+          "Region"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "barchart",
+        "mode": "preview-then-apply"
+      },
+      "resolvedReferences": {
+        "dimensions": [
+          {
+            "catalogId": "field-region",
+            "masterItemId": "master-region",
+            "label": "Region"
+          }
+        ],
+        "measures": [
+          {
+            "catalogId": "field-revenue",
+            "masterItemId": "master-revenue",
+            "label": "Revenue",
+            "expression": "Sum(Revenue)"
+          }
+        ]
+      },
+      "nativeChartType": "barchart",
+      "warnings": [],
+      "riskClass": "standard",
+      "propertyFixtureRef": "../qix/properties.json#/propertyProposals/normal-sales-by-region-v1",
+      "layoutFixtureRef": "../qix/layouts.json#/layouts/normal-sales-by-region-preview"
+    },
+    "high-cardinality-table-v1": {
+      "planHash": "sha256:fixture-high-cardinality-table-v1",
+      "catalogId": "sales-demo-v1",
+      "targetAliases": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "intent": {
+        "dimensions": [
+          "CustomerID"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "table",
+        "resultLimit": 10
+      },
+      "resolvedReferences": {
+        "dimensions": [
+          {
+            "catalogId": "field-customer-id",
+            "label": "CustomerID"
+          }
+        ],
+        "measures": [
+          {
+            "catalogId": "field-revenue",
+            "label": "Revenue",
+            "expression": "Sum(Revenue)"
+          }
+        ]
+      },
+      "nativeChartType": "table",
+      "warnings": [
+        "high-cardinality-dimension",
+        "bounded-result-required"
+      ],
+      "riskClass": "standard",
+      "propertyFixtureRef": "../qix/properties.json#/propertyProposals/high-cardinality-table-v1",
+      "layoutFixtureRef": "../qix/layouts.json#/layouts/high-cardinality-table-preview"
+    }
+  }
+}

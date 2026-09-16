@@ -1,0 +1,34 @@
+{
+  "servers": {
+    "qlik-requester": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/scripts/mcp/start.mjs", "--role", "requester"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "QLIK_CODEX_MCP_ACTOR": "local-dev-actor",
+        "QLIK_CODEX_MCP_HOST_CLIENT_ID": "vscode-qlik-requester"
+      }
+    },
+    "qlik-reviewer": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/scripts/mcp/start.mjs", "--role", "reviewer"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "QLIK_CODEX_MCP_ACTOR": "local-dev-reviewer",
+        "QLIK_CODEX_MCP_HOST_CLIENT_ID": "vscode-qlik-reviewer"
+      }
+    },
+    "qlik-verifier": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${workspaceFolder}/scripts/mcp/start.mjs", "--role", "verifier"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "QLIK_CODEX_MCP_ACTOR": "local-dev-actor",
+        "QLIK_CODEX_MCP_HOST_CLIENT_ID": "vscode-qlik-verifier"
+      }
+    }
+  }
+}

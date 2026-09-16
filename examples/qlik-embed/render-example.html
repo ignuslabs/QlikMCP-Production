@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Qlik AI Harness - Cloud render verification</title>
+    <!-- Populate these non-secret values from the approved A3 tenant record. -->
+    <meta name="qlik-host" content="REPLACE_WITH_QLIK_HOST" />
+    <meta name="qlik-oauth-client-id" content="REPLACE_WITH_SPA_CLIENT_ID" />
+    <meta name="qlik-redirect-uri" content="REPLACE_WITH_REDIRECT_URI" />
+    <style>
+      body {
+        font:
+          16px system-ui,
+          sans-serif;
+        margin: 2rem;
+        max-width: 72rem;
+      }
+      #chart-container {
+        height: 32rem;
+        border: 1px solid #bbb;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+      }
+      [role='status'] {
+        padding: 0.75rem;
+        background: #f1f4f6;
+      }
+      fieldset {
+        margin: 1rem 0;
+      }
+      fieldset,
+      [role='status'] {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Native Cloud object verification</h1>
+    <p>
+      Sign in through the tenant's approved OAuth SPA flow. This page receives no harness workload
+      token and stores no credential.
+    </p>
+
+    <script type="application/json" id="render-descriptor">
+      {
+        "rendering": "qlik-embed",
+        "connectionAlias": "cloud-dev",
+        "appId": "REPLACE_WITH_REAL_APP_ID",
+        "objectId": "REPLACE_WITH_REAL_OBJECT_ID",
+        "operationId": "REPLACE_WITH_REAL_OPERATION_ID",
+        "expectedNativeType": "REPLACE_WITH_EXPECTED_NATIVE_TYPE",
+        "mode": "persisted"
+      }
+    </script>
+
+    <fieldset>
+      <legend>Identity path being exercised</legend>
+      <label
+        ><input type="radio" name="path" value="authorized" checked /> authorized
+        writer/reader</label
+      >
+      <label><input type="radio" name="path" value="unauthorized" /> unauthorized user</label>
+      <label
+        ><input type="radio" name="path" value="data-reduced" /> Section Access/data-reduced
+        user</label
+      >
+      <label for="observed-outcome">Observed outcome</label>
+      <select id="observed-outcome">
+        <option value="rendered">native object visibly rendered</option>
+        <option value="access-denied">access denied</option>
+        <option value="empty">unexpected empty visualization</option>
+        <option value="error">rendering error</option>
+        <option value="timeout">rendering timeout</option>
+      </select>
+      <button id="record-result" type="button">Record observed result</button>
+    </fieldset>
+    <p id="status" role="status">Waiting for approved configuration.</p>
+    <section id="chart-container" aria-label="Qlik visualization container">
+      <qlik-embed
+        id="chart"
+        ui="analytics/chart"
+        theme="Sense Horizon"
+        iframe="true"
+        preview="true"
+      ></qlik-embed>
+    </section>
+
+    <script type="module" src="./render-example.js"></script>
+  </body>
+</html>

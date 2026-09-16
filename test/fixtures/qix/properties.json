@@ -1,0 +1,123 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-qix-property-fixtures-v1",
+  "nonProductionOnly": true,
+  "propertyProposals": {
+    "normal-sales-by-region-v1": {
+      "planHash": "sha256:fixture-normal-sales-by-region-v1",
+      "compilerVersion": "fixture-compiler-v1",
+      "chartType": "barchart",
+      "propertyProposal": {
+        "qInfo": {
+          "qType": "barchart",
+          "qId": "fixture-normal-sales-by-region"
+        },
+        "qMetaDef": {
+          "title": "Sales by region",
+          "description": "Synthetic fixture chart"
+        },
+        "qHyperCubeDef": {
+          "qDimensions": [
+            {
+              "qDef": {
+                "qFieldDefs": [
+                  "Region"
+                ],
+                "qFieldLabels": [
+                  "Region"
+                ]
+              },
+              "qNullSuppression": true
+            }
+          ],
+          "qMeasures": [
+            {
+              "qDef": {
+                "qDef": "Sum(Revenue)",
+                "qLabel": "Revenue"
+              }
+            }
+          ],
+          "qMode": "S",
+          "qInitialDataFetch": [
+            {
+              "qTop": 0,
+              "qLeft": 0,
+              "qHeight": 10,
+              "qWidth": 2
+            }
+          ],
+          "qSuppressZero": true,
+          "qSuppressMissing": true
+        },
+        "sorting": {
+          "by": "measure",
+          "direction": "descending"
+        }
+      },
+      "forbiddenInputs": [
+        "rawQixRequest",
+        "qixHandle",
+        "credential"
+      ]
+    },
+    "high-cardinality-table-v1": {
+      "planHash": "sha256:fixture-high-cardinality-table-v1",
+      "compilerVersion": "fixture-compiler-v1",
+      "chartType": "table",
+      "propertyProposal": {
+        "qInfo": {
+          "qType": "table",
+          "qId": "fixture-high-cardinality-table"
+        },
+        "qMetaDef": {
+          "title": "Customer revenue",
+          "description": "Synthetic bounded high-cardinality table fixture"
+        },
+        "qHyperCubeDef": {
+          "qDimensions": [
+            {
+              "qDef": {
+                "qFieldDefs": [
+                  "CustomerID"
+                ],
+                "qFieldLabels": [
+                  "CustomerID"
+                ]
+              },
+              "qNullSuppression": true
+            }
+          ],
+          "qMeasures": [
+            {
+              "qDef": {
+                "qDef": "Sum(Revenue)",
+                "qLabel": "Revenue"
+              }
+            }
+          ],
+          "qMode": "S",
+          "qInitialDataFetch": [
+            {
+              "qTop": 0,
+              "qLeft": 0,
+              "qHeight": 10,
+              "qWidth": 2
+            }
+          ],
+          "qSuppressZero": true,
+          "qSuppressMissing": true
+        },
+        "sorting": {
+          "by": "measure",
+          "direction": "descending"
+        }
+      },
+      "forbiddenInputs": [
+        "rawQixRequest",
+        "qixHandle",
+        "credential"
+      ]
+    }
+  }
+}

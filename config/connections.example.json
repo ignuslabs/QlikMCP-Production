@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.1.0",
+  "nonProductionOnly": true,
+  "liveValidation": "not-performed",
+  "readinessStatus": "blocked-until-platform-admin-evidence",
+  "readinessStatement": "No live connection can be declared ready without platform-admin-supplied nonsecret readiness evidence. This example does not claim live validation.",
+  "examplePurpose": "Safe offline fixture configuration. Copy this file to connections.json only when creating a local non-production override.",
+  "valueGuide": {
+    "connectionAlias": "A short harness-owned name used in MCP calls, such as cloud-dev. It is not a URL.",
+    "appId": "The stable Qlik app ID allowed by policy. It is not the app display name.",
+    "sheetId": "The stable Qlik sheet ID allowed for writes in that app. It is not the sheet title.",
+    "displayAliases": "Human-readable labels only; they never route a connection or authorize a target.",
+    "visualizationSchemaProfile": "Required compiler compatibility profile. Cloud uses qlik-cloud-current. Windows uses the profile matching its installed release.",
+    "visualizationSchemaVersion": "Required only for qlik-windows-november-2025-or-later. Record a semantic version validated against that exact Windows host; do not copy the Cloud version by assumption.",
+    "runtimeAddresses": "Tenant/server web addresses belong in .env or the deployment platform, never in this policy file.",
+    "secrets": "OAuth secrets, JWTs, certificates, passphrases, and tokens never belong in this file."
+  },
+  "fixtureArtifactRoot": "test/fixtures",
+  "fixtureCatalogAliases": [
+    "sales-demo-v1",
+    "empty-catalog-v1"
+  ],
+  "allowedEnvironments": [
+    "development",
+    "nonproduction"
+  ],
+  "connections": [
+    {
+      "alias": "cloud-dev",
+      "displayName": "Example Qlik Cloud development connection",
+      "platform": "qlik-cloud",
+      "visualizationSchemaProfile": "qlik-cloud-current",
+      "environment": "development",
+      "allowedApps": {
+        "app-sales-cloud-dev": ["sheet-sales-overview-cloud-dev"]
+      },
+      "allowedChartTypes": ["bar", "line", "scatter", "table", "kpi", "gauge", "treemap", "pie", "combo"],
+      "displayTenantAlias": "cloud-demo-tenant",
+      "displayRegionAlias": "demo-region",
+      "displayAppAlias": "sales-app-cloud-dev",
+      "displaySheetAliases": [
+        "sales-overview-cloud-dev",
+        "sales-readonly-cloud-dev"
+      ],
+      "authMode": "platform-admin-configured-oauth",
+      "readinessEvidence": "not-supplied",
+      "productionUse": false
+    },
+    {
+      "alias": "windows-dev",
+      "displayName": "Example Qlik Sense Enterprise on Windows development connection",
+      "platform": "qlik-sense-enterprise-on-windows",
+      "visualizationSchemaProfile": "qlik-windows-pre-november-2025",
+      "environment": "development",
+      "allowedApps": {
+        "app-sales-windows-dev": ["sheet-sales-overview-windows-dev"]
+      },
+      "allowedChartTypes": ["bar", "line", "scatter", "table", "kpi", "gauge", "treemap", "pie", "combo"],
+      "displayServerAlias": "windows-demo-server",
+      "displayVirtualProxyAlias": "demo-proxy",
+      "displayAppAlias": "sales-app-windows-dev",
+      "displaySheetAliases": [
+        "sales-overview-windows-dev",
+        "sales-readonly-windows-dev"
+      ],
+      "authMode": "platform-admin-configured-proxy-or-certificate-provider",
+      "readinessEvidence": "not-supplied",
+      "productionUse": false
+    }
+  ],
+  "forbiddenConfigurationValues": [
+    "host",
+    "url",
+    "token",
+    "oauthSecret",
+    "clientSecret",
+    "certificate",
+    "privateKey",
+    "authorizationHeader",
+    "productionTarget"
+  ]
+}

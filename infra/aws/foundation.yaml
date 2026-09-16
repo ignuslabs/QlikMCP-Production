@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Durable governance state, Qlik secret boundary, and least-privilege AgentCore execution role.
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - staging
+      - nonproduction
+      - production
+    Description: Deployment stage; production use requires separately scoped runtime policy.
+
+Resources:
+  GovernanceStateTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub qlik-ai-harness-agentcore-${Stage}
+      BillingMode: PAY_PER_REQUEST
+      DeletionProtectionEnabled: true
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: expiresAtEpoch
+        Enabled: true
+      Tags:
+        - Key: Application
+          Value: qlik-ai-harness-agentcore
+        - Key: Environment
+          Value: !Ref Stage
+
+  QlikCloudOAuthSecret:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      Name: !Sub /qlik-ai-harness/agentcore/${Stage}/qlik-cloud-oauth
+      Description: >-
+        Populate out of band with JSON containing clientSecret and connectionAlias.
+        CloudFormation intentionally never receives the secret value.
+      Tags:
+        - Key: Application
+          Value: qlik-ai-harness-agentcore
+        - Key: Environment
+          Value: !Ref Stage
+
+  AgentCoreExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub qlik-ai-harness-agentcore-${Stage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AgentCoreAssumeRole
+            Effect: Allow
+            Principal:
+              Service: bedrock-agentcore.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: !Sub arn:${AWS::Partition}:bedrock-agentcore:${AWS::Region}:${AWS::AccountId}:*
+      Policies:
+        - PolicyName: QlikHarnessRuntime
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: GovernanceState
+                Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                Resource: !GetAtt GovernanceStateTable.Arn
+              - Sid: QlikCloudOAuthSecret
+                Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource: !Ref QlikCloudOAuthSecret
+              - Sid: PullAgentCoreImage
+                Effect: Allow
+                Action:
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                Resource: !Sub arn:${AWS::Partition}:ecr:${AWS::Region}:${AWS::AccountId}:repository/bedrock-agentcore-*
+              - Sid: EcrAuthorization
+                Effect: Allow
+                Action: ecr:GetAuthorizationToken
+                Resource: '*'
+              - Sid: RuntimeLogGroupMetadata
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:DescribeLogStreams
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*
+              - Sid: RuntimeLogGroupDiscovery
+                Effect: Allow
+                Action: logs:DescribeLogGroups
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*
+              - Sid: RuntimeLogStreams
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/bedrock-agentcore/runtimes/*:log-stream:*
+      Tags:
+        - Key: Application
+          Value: qlik-ai-harness-agentcore
+        - Key: Environment
+          Value: !Ref Stage
+
+Outputs:
+  StateTableName:
+    Value: !Ref GovernanceStateTable
+  QlikSecretId:
+    Value: !Ref QlikCloudOAuthSecret
+  QlikSecretName:
+    Value: !Sub /qlik-ai-harness/agentcore/${Stage}/qlik-cloud-oauth
+  ExecutionRoleArn:
+    Value: !GetAtt AgentCoreExecutionRole.Arn

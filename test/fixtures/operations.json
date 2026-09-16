@@ -1,0 +1,895 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-logical-operation-v1",
+  "nonProductionOnly": true,
+  "artifactRefs": {
+    "catalog": "catalog.json",
+    "qixLayouts": "qix/layouts.json",
+    "qixProperties": "qix/properties.json",
+    "chartPlans": "plans/chart-plans.json",
+    "restLists": "rest/list-responses.json",
+    "responses": "responses.json",
+    "auditRecords": [
+      "audit/success.json",
+      "audit/permission.json",
+      "audit/transient.json",
+      "audit/replay.json",
+      "audit/partial-apply.json"
+    ]
+  },
+  "scenarioArtifactRefs": {
+    "normal-workflow": [
+      "plans/chart-plans.json#/plans/normal-sales-by-region-v1",
+      "qix/properties.json#/propertyProposals/normal-sales-by-region-v1",
+      "qix/layouts.json#/layouts/normal-sales-by-region-preview",
+      "responses.json#/responses/normal-verified",
+      "audit/success.json"
+    ],
+    "empty-catalog": [
+      "rest/list-responses.json#/responses/empty-catalog-page-1",
+      "rest/list-responses.json#/responses/windows-empty-catalog-page-1",
+      "responses.json#/responses/empty-catalog"
+    ],
+    "high-cardinality-bounded-result": [
+      "plans/chart-plans.json#/plans/high-cardinality-table-v1",
+      "qix/properties.json#/propertyProposals/high-cardinality-table-v1",
+      "qix/layouts.json#/layouts/high-cardinality-table-preview"
+    ],
+    "not-found": [
+      "responses.json#/responses/not-found"
+    ],
+    "malformed-request": [
+      "responses.json#/responses/malformed-request"
+    ],
+    "ambiguous-field": [
+      "catalog.json#/catalogs/sales-demo-v1/fields/5",
+      "catalog.json#/catalogs/sales-demo-v1/fields/6",
+      "responses.json#/responses/ambiguous-field"
+    ],
+    "sensitive-field": [
+      "catalog.json#/catalogs/sales-demo-v1/excludedMetadataExamples/0",
+      "responses.json#/responses/sensitive-field"
+    ],
+    "planner-negative-cases": [
+      "responses.json#/responses/planner-negative-cases"
+    ],
+    "idempotent-completed-replay": [
+      "responses.json#/responses/idempotent-completed-replay",
+      "audit/replay.json"
+    ],
+    "conflicting-idempotency-key": [
+      "responses.json#/responses/conflicting-idempotency-key"
+    ],
+    "approval-binding-mismatches": [
+      "responses.json#/responses/approval-binding-mismatches"
+    ],
+    "permission-denied": [
+      "audit/permission.json"
+    ],
+    "capacity-transient-rate-limit": [
+      "responses.json#/responses/capacity",
+      "responses.json#/responses/transient",
+      "responses.json#/responses/rate-limit",
+      "audit/transient.json"
+    ],
+    "partial-apply-cleanup": [
+      "audit/partial-apply.json"
+    ],
+    "approval-expiry": [
+      "responses.json#/responses/approval-expiry"
+    ],
+    "approval-replay": [
+      "responses.json#/responses/approval-replay"
+    ]
+  },
+  "targetAliases": [
+    "cloud-dev",
+    "windows-dev"
+  ],
+  "operationContract": {
+    "phases": [
+      "discovered",
+      "planned",
+      "previewed",
+      "approval-requested",
+      "approved",
+      "applying",
+      "verified",
+      "failed",
+      "cleanup-required",
+      "expired",
+      "replayed"
+    ],
+    "approvalBinding": [
+      "actor",
+      "connectionAlias",
+      "appId",
+      "sheetId",
+      "planHash",
+      "riskClass",
+      "expiresAt",
+      "singleUse"
+    ],
+    "resultLimits": {
+      "maxPreviewRows": 10,
+      "maxTableRows": 100,
+      "maxErrorDetails": 3
+    },
+    "errorEnvelope": {
+      "required": [
+        "code",
+        "category",
+        "retryable",
+        "stage",
+        "message"
+      ],
+      "forbidden": [
+        "token",
+        "authorizationHeader",
+        "certificate",
+        "privateKey",
+        "rawQixPayload"
+      ]
+    },
+    "typedFailures": [
+      {
+        "code": "EMPTY_CATALOG",
+        "category": "catalog",
+        "retryable": false,
+        "stage": "discovery",
+        "message": "No policy-visible fields, master items, or sheets are available."
+      },
+      {
+        "code": "AMBIGUOUS_FIELD",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested display label resolves to more than one authorized field."
+      },
+      {
+        "code": "SENSITIVE_FIELD",
+        "category": "policy",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested field is excluded by sensitive-data policy."
+      },
+      {
+        "code": "PERMISSION_DENIED",
+        "category": "authorization",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The effective identity is not authorized for this operation."
+      },
+      {
+        "code": "CAPACITY_EXHAUSTED",
+        "category": "capacity",
+        "retryable": true,
+        "stage": "preview",
+        "retryAfterSeconds": 30,
+        "message": "The target cannot accept another preview session within its capacity policy."
+      },
+      {
+        "code": "TRANSIENT_UNAVAILABLE",
+        "category": "transient",
+        "retryable": true,
+        "stage": "preview",
+        "retryAfterSeconds": 5,
+        "message": "The target session is temporarily unavailable."
+      },
+      {
+        "code": "RATE_LIMITED",
+        "category": "rate-limit",
+        "retryable": true,
+        "stage": "discovery",
+        "retryAfterSeconds": 15,
+        "message": "The target request limit was reached; retry after the supplied delay."
+      },
+      {
+        "code": "NOT_FOUND",
+        "category": "not-found",
+        "retryable": false,
+        "stage": "discovery",
+        "message": "The requested policy-visible target or resource was not found."
+      },
+      {
+        "code": "MALFORMED_REQUEST",
+        "category": "validation",
+        "retryable": false,
+        "stage": "request",
+        "message": "The request does not match the supported typed operation contract."
+      },
+      {
+        "code": "APPROVAL_EXPIRED",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The approval is past its expiry and cannot authorize a mutation."
+      },
+      {
+        "code": "APPROVAL_REPLAYED",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The single-use approval has already been consumed."
+      },
+      {
+        "code": "APPROVAL_ACTOR_MISMATCH",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The approval actor does not match the applying actor."
+      },
+      {
+        "code": "APPROVAL_TARGET_MISMATCH",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The approval target does not match the requested connection, app, or sheet."
+      },
+      {
+        "code": "APPROVAL_PLAN_HASH_MISMATCH",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The approval plan hash does not match the requested plan."
+      },
+      {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "category": "idempotency",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The idempotency key is already bound to a different actor, target, or plan."
+      },
+      {
+        "code": "UNKNOWN_FIELD",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested field is not present in the authorized semantic catalog."
+      },
+      {
+        "code": "UNSUPPORTED_CHART",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested chart type is not enabled for this target catalog."
+      },
+      {
+        "code": "DISALLOWED_EXPRESSION",
+        "category": "policy",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested expression is outside the approved aggregation and expression allowlist."
+      },
+      {
+        "code": "INVALID_DIMENSION",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested dimension is not a valid dimension for the selected chart plan."
+      },
+      {
+        "code": "INVALID_MEASURE",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested measure is not a valid measure for the selected chart plan."
+      },
+      {
+        "code": "PARTIAL_APPLY",
+        "category": "mutation",
+        "retryable": false,
+        "stage": "apply",
+        "message": "A persistent object was created but the complete apply workflow did not finish."
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "normal-workflow",
+      "description": "The same approved native chart workflow is valid for both target adapters.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "appAliasByTarget": {
+          "cloud-dev": "sales-app-cloud-dev",
+          "windows-dev": "sales-app-windows-dev"
+        },
+        "sheetAliasByTarget": {
+          "cloud-dev": "sales-overview-cloud-dev",
+          "windows-dev": "sales-overview-windows-dev"
+        },
+        "dimensions": [
+          "Region"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "barchart",
+        "mode": "preview-then-apply"
+      },
+      "expected": {
+        "workflow": [
+          "discovered",
+          "planned",
+          "previewed",
+          "approval-requested",
+          "approved",
+          "applying",
+          "verified"
+        ],
+        "status": "verified",
+        "planHash": "sha256:fixture-normal-sales-by-region-v1",
+        "rendering": "qlik-embed",
+        "objectIdByTarget": {
+          "cloud-dev": "object-normal-cloud-001",
+          "windows-dev": "object-normal-windows-001"
+        },
+        "cleanupExpectation": {
+          "required": true,
+          "scope": "created-object-and-created-sheet-attachment",
+          "mustNotDelete": "pre-existing objects",
+          "expectedResult": "test object and attachment are removed by the cleanup runbook"
+        }
+      }
+    },
+    {
+      "id": "empty-catalog",
+      "description": "Discovery returns a valid empty catalog without exposing hidden metadata.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "catalogVariant": "empty",
+        "appAliasByTarget": {
+          "cloud-dev": "sales-app-cloud-dev",
+          "windows-dev": "sales-app-windows-dev"
+        }
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "EMPTY_CATALOG",
+          "category": "catalog",
+          "retryable": false,
+          "stage": "discovery"
+        },
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "high-cardinality-bounded-result",
+      "description": "A high-cardinality dimension is allowed only with a bounded result.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "dimensions": [
+          "CustomerID"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "table",
+        "resultLimit": 10
+      },
+      "expected": {
+        "status": "previewed",
+        "dimensionCardinalityBand": "high",
+        "returnedRows": 10,
+        "maxRows": 10,
+        "truncated": true,
+        "continuation": "fixture-continuation-001",
+        "rawDataIncluded": false,
+        "cleanupRequired": true,
+        "cleanupExpectation": {
+          "scope": "session-preview-only",
+          "expectedResult": "session object is disposed after preview"
+        }
+      }
+    },
+    {
+      "id": "not-found",
+      "description": "A missing policy-visible app is mapped to a typed non-retryable failure.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "appAliasByTarget": {
+          "cloud-dev": "missing-sales-app-cloud-dev",
+          "windows-dev": "missing-sales-app-windows-dev"
+        }
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "NOT_FOUND",
+          "category": "not-found",
+          "retryable": false,
+          "stage": "discovery"
+        },
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "malformed-request",
+      "description": "A request with an unsupported property is rejected before target dispatch.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "dimensions": [
+          "Region"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "unexpectedProperty": "fixture-value"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "MALFORMED_REQUEST",
+          "category": "validation",
+          "retryable": false,
+          "stage": "request"
+        },
+        "adapterInvoked": false,
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "ambiguous-field",
+      "description": "An unqualified display label is rejected when two authorized fields share it.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "dimensions": [
+          "Status"
+        ],
+        "measures": [
+          "Revenue"
+        ]
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "AMBIGUOUS_FIELD",
+          "category": "validation",
+          "retryable": false,
+          "stage": "planning"
+        },
+        "candidates": [
+          "field-status-order",
+          "field-status-customer"
+        ],
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "sensitive-field",
+      "description": "A synthetic sensitive field is absent from the exposed catalog and cannot be planned.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "dimensions": [
+          "CustomerEmail"
+        ],
+        "measures": [
+          "Revenue"
+        ]
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "SENSITIVE_FIELD",
+          "category": "policy",
+          "retryable": false,
+          "stage": "planning"
+        },
+        "excludedMetadataId": "field-customer-email",
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "permission-denied",
+      "description": "A read-only identity cannot attach or persist a chart.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "sheetAliasByTarget": {
+          "cloud-dev": "sales-readonly-cloud-dev",
+          "windows-dev": "sales-readonly-windows-dev"
+        },
+        "dimensions": [
+          "Region"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "barchart"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "PERMISSION_DENIED",
+          "category": "authorization",
+          "retryable": false,
+          "stage": "apply"
+        },
+        "previewMaySucceed": true,
+        "mutationAttempted": true,
+        "persistentObjectCreated": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "planner-negative-cases",
+      "description": "The planner rejects invalid references, chart types, expressions, and role combinations without mutation.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "cases": [
+        {
+          "id": "unknown-field",
+          "request": {
+            "dimensions": [
+              "NotInCatalog"
+            ],
+            "measures": [
+              "Revenue"
+            ],
+            "preferredChartType": "barchart"
+          },
+          "expectedFailure": {
+            "code": "UNKNOWN_FIELD",
+            "category": "validation",
+            "retryable": false,
+            "stage": "planning"
+          }
+        },
+        {
+          "id": "unsupported-chart",
+          "request": {
+            "dimensions": [
+              "Region"
+            ],
+            "measures": [
+              "Revenue"
+            ],
+            "preferredChartType": "radar"
+          },
+          "expectedFailure": {
+            "code": "UNSUPPORTED_CHART",
+            "category": "validation",
+            "retryable": false,
+            "stage": "planning"
+          }
+        },
+        {
+          "id": "disallowed-expression",
+          "request": {
+            "dimensions": [
+              "Region"
+            ],
+            "measures": [
+              "Sum(Revenue)+Avg(Margin)"
+            ],
+            "preferredChartType": "barchart"
+          },
+          "expectedFailure": {
+            "code": "DISALLOWED_EXPRESSION",
+            "category": "policy",
+            "retryable": false,
+            "stage": "planning"
+          }
+        },
+        {
+          "id": "invalid-dimension",
+          "request": {
+            "dimensions": [
+              "Revenue"
+            ],
+            "measures": [
+              "Margin"
+            ],
+            "preferredChartType": "barchart"
+          },
+          "expectedFailure": {
+            "code": "INVALID_DIMENSION",
+            "category": "validation",
+            "retryable": false,
+            "stage": "planning"
+          }
+        },
+        {
+          "id": "invalid-measure",
+          "request": {
+            "dimensions": [
+              "Region"
+            ],
+            "measures": [
+              "OrderDate"
+            ],
+            "preferredChartType": "barchart"
+          },
+          "expectedFailure": {
+            "code": "INVALID_MEASURE",
+            "category": "validation",
+            "retryable": false,
+            "stage": "planning"
+          }
+        }
+      ],
+      "expected": {
+        "status": "failed",
+        "mutationAttempted": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "capacity-transient-rate-limit",
+      "description": "Provider failures use the same typed contract on Cloud and Windows.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "cases": [
+        {
+          "id": "capacity",
+          "expectedFailure": {
+            "code": "CAPACITY_EXHAUSTED",
+            "category": "capacity",
+            "retryable": true,
+            "stage": "preview",
+            "retryAfterSeconds": 30
+          },
+          "retryPolicy": "bounded-backoff"
+        },
+        {
+          "id": "transient",
+          "expectedFailure": {
+            "code": "TRANSIENT_UNAVAILABLE",
+            "category": "transient",
+            "retryable": true,
+            "stage": "preview",
+            "retryAfterSeconds": 5
+          },
+          "retryPolicy": "bounded-backoff"
+        },
+        {
+          "id": "rate-limit",
+          "expectedFailure": {
+            "code": "RATE_LIMITED",
+            "category": "rate-limit",
+            "retryable": true,
+            "stage": "discovery",
+            "retryAfterSeconds": 15
+          },
+          "retryPolicy": "bounded-backoff"
+        }
+      ],
+      "cleanupExpectation": {
+        "required": true,
+        "scope": "any-open-session-or-session-object",
+        "expectedResult": "close/dispose is attempted before a retry or final failure"
+      }
+    },
+    {
+      "id": "approval-expiry",
+      "description": "An expired approval cannot authorize a later apply.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "planHash": "sha256:fixture-normal-sales-by-region-v1",
+        "approvalState": "expired",
+        "expiresAt": "2026-01-01T00:00:00Z"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "APPROVAL_EXPIRED",
+          "category": "approval",
+          "retryable": false,
+          "stage": "apply"
+        },
+        "adapterMutationInvoked": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "approval-replay",
+      "description": "A consumed single-use approval cannot be replayed.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "planHash": "sha256:fixture-normal-sales-by-region-v1",
+        "approvalState": "consumed",
+        "idempotencyKey": "fixture-idempotency-normal-001"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "APPROVAL_REPLAYED",
+          "category": "approval",
+          "retryable": false,
+          "stage": "apply"
+        },
+        "adapterMutationInvoked": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "idempotent-completed-replay",
+      "description": "A completed operation replay returns the original sanitized result without another mutation.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "actor": "fixture-analyst",
+        "connectionAlias": "cloud-dev",
+        "appId": "app-sales-cloud-dev",
+        "sheetId": "sheet-sales-overview-cloud-dev",
+        "planHash": "sha256:fixture-normal-sales-by-region-v1",
+        "idempotencyKey": "fixture-idempotency-normal-001"
+      },
+      "expected": {
+        "status": "replayed",
+        "originalOperationId": "operation-normal-cloud-001",
+        "originalObjectId": "object-normal-cloud-001",
+        "sameSanitizedResult": true,
+        "adapterMutationInvoked": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "conflicting-idempotency-key",
+      "description": "Reusing a completed idempotency key for a different plan is rejected.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "actor": "fixture-analyst",
+        "connectionAlias": "cloud-dev",
+        "appId": "app-sales-cloud-dev",
+        "sheetId": "sheet-sales-overview-cloud-dev",
+        "planHash": "sha256:fixture-conflicting-plan-v1",
+        "idempotencyKey": "fixture-idempotency-normal-001"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "IDEMPOTENCY_CONFLICT",
+          "category": "idempotency",
+          "retryable": false,
+          "stage": "apply"
+        },
+        "adapterMutationInvoked": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "approval-binding-mismatches",
+      "description": "An approval cannot be applied by another actor, to another target, or for another plan.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "cases": [
+        {
+          "id": "actor-mismatch",
+          "request": {
+            "approvalActor": "fixture-approver",
+            "applyingActor": "fixture-other-actor",
+            "planHash": "sha256:fixture-normal-sales-by-region-v1"
+          },
+          "expectedFailure": {
+            "code": "APPROVAL_ACTOR_MISMATCH",
+            "category": "approval",
+            "retryable": false,
+            "stage": "apply"
+          }
+        },
+        {
+          "id": "target-mismatch",
+          "request": {
+            "approvalTarget": "cloud-dev/app-sales-cloud-dev/sheet-sales-overview-cloud-dev",
+            "applyingTarget": "cloud-dev/app-sales-cloud-dev/sheet-sales-readonly-cloud-dev",
+            "planHash": "sha256:fixture-normal-sales-by-region-v1"
+          },
+          "expectedFailure": {
+            "code": "APPROVAL_TARGET_MISMATCH",
+            "category": "approval",
+            "retryable": false,
+            "stage": "apply"
+          }
+        },
+        {
+          "id": "plan-hash-mismatch",
+          "request": {
+            "approvalPlanHash": "sha256:fixture-normal-sales-by-region-v1",
+            "applyingPlanHash": "sha256:fixture-conflicting-plan-v1"
+          },
+          "expectedFailure": {
+            "code": "APPROVAL_PLAN_HASH_MISMATCH",
+            "category": "approval",
+            "retryable": false,
+            "stage": "apply"
+          }
+        }
+      ],
+      "expected": {
+        "status": "failed",
+        "adapterMutationInvoked": false,
+        "cleanupRequired": false
+      }
+    },
+    {
+      "id": "partial-apply-cleanup",
+      "description": "Attachment failure after object creation triggers scoped cleanup and an auditable outcome.",
+      "targets": [
+        "cloud-dev",
+        "windows-dev"
+      ],
+      "request": {
+        "dimensions": [
+          "Region"
+        ],
+        "measures": [
+          "Revenue"
+        ],
+        "preferredChartType": "barchart",
+        "failureInjection": "attach-sheet-fails"
+      },
+      "expected": {
+        "status": "failed",
+        "typedFailure": {
+          "code": "PARTIAL_APPLY",
+          "category": "mutation",
+          "retryable": false,
+          "stage": "apply"
+        },
+        "persistentObjectCreated": true,
+        "sheetAttachmentCreated": false,
+        "cleanup": {
+          "attempted": true,
+          "scope": "object-created-by-this-operation-only",
+          "mustNotDelete": "pre-existing objects or sheets",
+          "onCleanupSuccess": "operation remains failed and records cleanup-complete",
+          "onCleanupFailure": "operation transitions to cleanup-required and emits an operator alert"
+        },
+        "auditRequired": [
+          "operationId",
+          "createdObjectId",
+          "cleanupAttempted",
+          "cleanupOutcome",
+          "correlationId"
+        ]
+      }
+    }
+  ]
+}

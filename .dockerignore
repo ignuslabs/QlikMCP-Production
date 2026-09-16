@@ -1,0 +1,33 @@
+# Only build inputs may enter the Docker context. Local configuration is excluded by default.
+**
+!package.json
+!package-lock.json
+!.npmrc
+!tsconfig.json
+!tsconfig.build.json
+!Dockerfile
+!.dockerignore
+!src/
+!src/**/
+!src/**/*.ts
+!scripts/
+!scripts/package/
+!scripts/package/preparePackage.mjs
+!scripts/package/cleanDist.mjs
+!config/
+!config/connections.example.json
+!test/
+!test/fixtures/
+!test/fixtures/**/
+!test/fixtures/**/*.json
+# Defense in depth for private material nested inside allowed input directories.
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.har
+**/*.netlog
+**/*.log
+**/.DS_Store

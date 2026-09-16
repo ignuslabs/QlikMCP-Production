@@ -1,0 +1,36 @@
+{
+  "recordVersion": "1.0.0",
+  "recordType": "sanitized-operation-audit",
+  "operationId": "operation-normal-cloud-001",
+  "timestamp": "2026-08-04T12:00:00Z",
+  "correlationId": "corr-fixture-success-001",
+  "requestingPrincipal": "fixture-analyst",
+  "hostClientId": "fixture-mcp-host",
+  "connectionAlias": "cloud-dev",
+  "platform": "cloud",
+  "target": {
+    "appId": "app-sales-cloud-dev",
+    "sheetId": "sheet-sales-overview-cloud-dev"
+  },
+  "effectiveQlikIdentityClass": "development-workload",
+  "intentVersion": "chart-intent-v1",
+  "compilerVersion": "fixture-compiler-v1",
+  "planHash": "sha256:fixture-normal-sales-by-region-v1",
+  "policyResult": "allowed-designated-development-sheet",
+  "approvalState": "consumed",
+  "typedOutcome": {
+    "status": "verified",
+    "category": "success"
+  },
+  "retryCount": 0,
+  "durationMilliseconds": 842,
+  "cleanupAttempted": true,
+  "cleanupOutcome": "cleanup-complete",
+  "createdObjectId": "object-normal-cloud-001",
+  "traceReference": "fixture-trace-success-001",
+  "redaction": {
+    "rawPayloadsRemoved": true,
+    "sensitiveValuesRemoved": true,
+    "credentialMaterialPresent": false
+  }
+}

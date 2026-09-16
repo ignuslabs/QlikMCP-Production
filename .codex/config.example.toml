@@ -1,0 +1,96 @@
+# Copy this file to `.codex/config.toml`, replace every `__PLACEHOLDER__`, and set
+# the resulting local file to mode 0600. Use one absolute state directory for
+# all three roles. Replace unused platform-specific secret-provider selectors
+# with an empty string. The local file is intentionally gitignored because it
+# contains machine-specific absolute paths.
+
+[mcp_servers.qlik_requester]
+command = "__ABSOLUTE_NODE_BINARY__"
+args = ["__REPOSITORY_ROOT__/scripts/mcp/start.mjs", "--role", "requester", "--state-dir", "__ABSOLUTE_STATE_DIRECTORY__"]
+cwd = "__REPOSITORY_ROOT__"
+enabled = true
+required = true
+startup_timeout_sec = 30
+tool_timeout_sec = 120
+default_tools_approval_mode = "writes"
+enabled_tools = [
+  "qlik_get_readiness",
+  "qlik_list_apps",
+  "qlik_get_app_catalog",
+  "qlik_list_sheet_objects",
+  "qlik_plan_visualization",
+  "qlik_preview_visualization",
+  "qlik_request_visualization_approval",
+  "qlik_get_visualization_approval",
+  "qlik_apply_visualization",
+  "qlik_get_operation",
+]
+
+[mcp_servers.qlik_requester.env]
+QLIK_CODEX_KEYCHAIN_ACCOUNT = "__KEYCHAIN_ACCOUNT__"
+QLIK_CODEX_KEYCHAIN_SERVICE = "__KEYCHAIN_SERVICE__"
+QLIK_CODEX_SECRET_NAME = "__POWERSHELL_SECRET_NAME__"
+QLIK_CODEX_SECRET_VAULT = "__POWERSHELL_SECRET_VAULT__"
+QLIK_CODEX_MCP_ACTOR = "__REQUESTER_ACTOR__"
+QLIK_CODEX_MCP_HOST_CLIENT_ID = "codex-qlik-requester"
+QLIK_HARNESS_TARGET_MODE = "cloud"
+QLIK_HARNESS_MUTATION_ACTORS = "__REQUESTER_ACTOR__"
+QLIK_HARNESS_REVIEWER_ACTORS = "__REVIEWER_ACTOR__"
+QLIK_HARNESS_LOG_LEVEL = "debug"
+
+[mcp_servers.qlik_requester.tools.qlik_preview_visualization]
+approval_mode = "approve"
+
+[mcp_servers.qlik_requester.tools.qlik_request_visualization_approval]
+approval_mode = "approve"
+
+[mcp_servers.qlik_requester.tools.qlik_apply_visualization]
+approval_mode = "approve"
+
+[mcp_servers.qlik_reviewer]
+command = "__ABSOLUTE_NODE_BINARY__"
+args = ["__REPOSITORY_ROOT__/scripts/mcp/start.mjs", "--role", "reviewer", "--state-dir", "__ABSOLUTE_STATE_DIRECTORY__"]
+cwd = "__REPOSITORY_ROOT__"
+enabled = true
+required = true
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+default_tools_approval_mode = "prompt"
+enabled_tools = [
+  "qlik_get_visualization_approval",
+  "qlik_approve_visualization_request",
+  "qlik_reject_visualization_request",
+]
+
+[mcp_servers.qlik_reviewer.env]
+QLIK_CODEX_MCP_ACTOR = "__REVIEWER_ACTOR__"
+QLIK_CODEX_MCP_HOST_CLIENT_ID = "codex-qlik-reviewer"
+QLIK_HARNESS_TARGET_MODE = "cloud"
+QLIK_HARNESS_MUTATION_ACTORS = "__REQUESTER_ACTOR__"
+QLIK_HARNESS_REVIEWER_ACTORS = "__REVIEWER_ACTOR__"
+QLIK_HARNESS_LOG_LEVEL = "debug"
+
+[mcp_servers.qlik_reviewer.tools.qlik_get_visualization_approval]
+approval_mode = "approve"
+
+[mcp_servers.qlik_verifier]
+command = "__ABSOLUTE_NODE_BINARY__"
+args = ["__REPOSITORY_ROOT__/scripts/mcp/start.mjs", "--role", "verifier", "--state-dir", "__ABSOLUTE_STATE_DIRECTORY__"]
+cwd = "__REPOSITORY_ROOT__"
+enabled = true
+required = true
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+default_tools_approval_mode = "prompt"
+enabled_tools = ["qlik_get_visualization_approval"]
+
+[mcp_servers.qlik_verifier.env]
+QLIK_CODEX_MCP_ACTOR = "__REQUESTER_ACTOR__"
+QLIK_CODEX_MCP_HOST_CLIENT_ID = "codex-qlik-verifier"
+QLIK_HARNESS_TARGET_MODE = "cloud"
+QLIK_HARNESS_MUTATION_ACTORS = "__REQUESTER_ACTOR__"
+QLIK_HARNESS_REVIEWER_ACTORS = "__REVIEWER_ACTOR__"
+QLIK_HARNESS_LOG_LEVEL = "debug"
+
+[mcp_servers.qlik_verifier.tools.qlik_get_visualization_approval]
+approval_mode = "approve"

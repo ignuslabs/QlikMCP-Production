@@ -1,0 +1,10 @@
+dist/
+coverage/
+node_modules/
+.qlik-ai-harness/
+package-lock.json
+docs/
+test/fixtures/
+config/connections.example.json
+**/*.mov
+**/*.mp4

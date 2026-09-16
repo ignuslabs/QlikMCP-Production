@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "qlik-ai-harness-remote": {
+      "type": "http",
+      "url": "${input:qlikHarnessMcpUrl}"
+    }
+  },
+  "inputs": [
+    {
+      "id": "qlikHarnessMcpUrl",
+      "type": "promptString",
+      "description": "Approved HTTPS Streamable HTTP MCP endpoint",
+      "password": false
+    }
+  ]
+}

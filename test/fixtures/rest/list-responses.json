@@ -1,0 +1,125 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-rest-list-response-fixtures-v1",
+  "nonProductionOnly": true,
+  "responses": {
+    "cloud-dev-apps-page-1": {
+      "targetAlias": "cloud-dev",
+      "operation": "list-apps",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": "app-sales-cloud-dev",
+            "name": "Synthetic Sales Cloud Development",
+            "alias": "sales-app-cloud-dev",
+            "environment": "development"
+          }
+        ],
+        "next": null,
+        "total": 1
+      }
+    },
+    "windows-dev-apps-page-1": {
+      "targetAlias": "windows-dev",
+      "operation": "list-apps",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": "app-sales-windows-dev",
+            "name": "Synthetic Sales Windows Development",
+            "alias": "sales-app-windows-dev",
+            "environment": "development"
+          }
+        ],
+        "next": null,
+        "total": 1
+      }
+    },
+    "cloud-dev-sheets-page-1": {
+      "targetAlias": "cloud-dev",
+      "operation": "list-sheets",
+      "appId": "app-sales-cloud-dev",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": "sheet-sales-overview-cloud-dev",
+            "alias": "sales-overview-cloud-dev",
+            "name": "Sales Overview",
+            "writeAllowed": true
+          },
+          {
+            "id": "sheet-sales-readonly-cloud-dev",
+            "alias": "sales-readonly-cloud-dev",
+            "name": "Sales Read Only",
+            "writeAllowed": false
+          }
+        ],
+        "next": null,
+        "total": 2
+      }
+    },
+    "windows-dev-sheets-page-1": {
+      "targetAlias": "windows-dev",
+      "operation": "list-sheets",
+      "appId": "app-sales-windows-dev",
+      "status": 200,
+      "body": {
+        "data": [
+          {
+            "id": "sheet-sales-overview-windows-dev",
+            "alias": "sales-overview-windows-dev",
+            "name": "Sales Overview",
+            "writeAllowed": true
+          },
+          {
+            "id": "sheet-sales-readonly-windows-dev",
+            "alias": "sales-readonly-windows-dev",
+            "name": "Sales Read Only",
+            "writeAllowed": false
+          }
+        ],
+        "next": null,
+        "total": 2
+      }
+    },
+    "empty-catalog-page-1": {
+      "targetAlias": "cloud-dev",
+      "catalogVariant": "empty",
+      "operation": "get-app-catalog",
+      "status": 200,
+      "body": {
+        "catalogId": "empty-catalog-v1",
+        "fields": [],
+        "masterItems": [],
+        "sheets": [],
+        "chartSupport": [],
+        "continuation": null
+      }
+    },
+    "windows-empty-catalog-page-1": {
+      "targetAlias": "windows-dev",
+      "catalogVariant": "empty",
+      "operation": "get-app-catalog",
+      "status": 200,
+      "body": {
+        "catalogId": "empty-catalog-v1",
+        "fields": [],
+        "masterItems": [],
+        "sheets": [],
+        "chartSupport": [],
+        "continuation": null
+      }
+    }
+  },
+  "forbiddenResponseProperties": [
+    "token",
+    "authorizationHeader",
+    "certificate",
+    "privateKey",
+    "rawQixPayload",
+    "credentials"
+  ]
+}

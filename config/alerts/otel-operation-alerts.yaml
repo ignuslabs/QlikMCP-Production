@@ -1,0 +1,31 @@
+groups:
+  - name: qlik-ai-harness
+    rules:
+      - alert: QlikHarnessCapacityExhaustion
+        expr: sum(rate(qlik_harness_operations_total{error_category=~"capacity|rate-limit"}[5m])) > 0
+        for: 5m
+        labels: { severity: warning, owner: harness-operations }
+        annotations:
+          summary: Harness capacity or rate-limit failures are continuing
+          runbook: docs/runbooks/provider-operations.md#capacity
+      - alert: QlikHarnessSecurityFailure
+        expr: sum(rate(qlik_harness_operations_total{error_category=~"authorization|policy"}[5m])) > 0
+        for: 1m
+        labels: { severity: critical, owner: harness-security }
+        annotations:
+          summary: Harness authorization or policy failures detected
+          runbook: docs/runbooks/provider-operations.md#security
+      - alert: QlikHarnessRedactionInvariant
+        expr: sum(qlik_harness_operations_total{credential_material_present="true"}) > 0
+        for: 0m
+        labels: { severity: critical, owner: harness-security }
+        annotations:
+          summary: A telemetry record reported credential material
+          runbook: docs/runbooks/provider-operations.md#security
+      - alert: QlikHarnessMissingMutationAudit
+        expr: increase(qlik_harness_apply_requests_total[10m]) > increase(qlik_harness_operations_total{status=~"verified|failed|cleanup-required"}[10m])
+        for: 5m
+        labels: { severity: critical, owner: harness-operations }
+        annotations:
+          summary: Apply requests do not have matching terminal audit events
+          runbook: docs/runbooks/provider-operations.md#missing-audit

@@ -1,0 +1,225 @@
+{
+  "fixtureVersion": "1.0.0",
+  "contract": "qlik-sanitized-response-fixtures-v1",
+  "nonProductionOnly": true,
+  "responses": {
+    "normal-verified": {
+      "operationId": "operation-normal-cloud-001",
+      "status": "verified",
+      "planHash": "sha256:fixture-normal-sales-by-region-v1",
+      "objectId": "object-normal-cloud-001",
+      "rendering": "qlik-embed",
+      "previewRows": 4,
+      "rawDataIncluded": false
+    },
+    "empty-catalog": {
+      "operationId": "operation-empty-catalog-001",
+      "status": "failed",
+      "error": {
+        "code": "EMPTY_CATALOG",
+        "category": "catalog",
+        "retryable": false,
+        "stage": "discovery",
+        "message": "No policy-visible fields, master items, or sheets are available."
+      }
+    },
+    "not-found": {
+      "operationId": "operation-not-found-001",
+      "status": "failed",
+      "error": {
+        "code": "NOT_FOUND",
+        "category": "not-found",
+        "retryable": false,
+        "stage": "discovery",
+        "message": "The requested policy-visible target or resource was not found."
+      }
+    },
+    "malformed-request": {
+      "operationId": "operation-malformed-request-001",
+      "status": "failed",
+      "error": {
+        "code": "MALFORMED_REQUEST",
+        "category": "validation",
+        "retryable": false,
+        "stage": "request",
+        "message": "The request does not match the supported typed operation contract."
+      }
+    },
+    "ambiguous-field": {
+      "operationId": "operation-ambiguous-field-001",
+      "status": "failed",
+      "error": {
+        "code": "AMBIGUOUS_FIELD",
+        "category": "validation",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested field label matches multiple authorized catalog fields."
+      },
+      "candidates": [
+        "field-status-order",
+        "field-status-customer"
+      ],
+      "mutationAttempted": false
+    },
+    "sensitive-field": {
+      "operationId": "operation-sensitive-field-001",
+      "status": "failed",
+      "error": {
+        "code": "SENSITIVE_FIELD",
+        "category": "policy",
+        "retryable": false,
+        "stage": "planning",
+        "message": "The requested field is excluded by the sensitive-field policy."
+      },
+      "excludedMetadataId": "field-customer-email",
+      "mutationAttempted": false
+    },
+    "planner-negative-cases": {
+      "operationId": "operation-planner-negative-001",
+      "status": "failed",
+      "cases": {
+        "unknown-field": {
+          "code": "UNKNOWN_FIELD",
+          "category": "validation",
+          "retryable": false,
+          "stage": "planning",
+          "message": "The requested field is not present in the authorized semantic catalog."
+        },
+        "unsupported-chart": {
+          "code": "UNSUPPORTED_CHART",
+          "category": "validation",
+          "retryable": false,
+          "stage": "planning",
+          "message": "The requested chart type is not enabled for this target catalog."
+        },
+        "disallowed-expression": {
+          "code": "DISALLOWED_EXPRESSION",
+          "category": "policy",
+          "retryable": false,
+          "stage": "planning",
+          "message": "The requested expression is outside the approved aggregation and expression allowlist."
+        },
+        "invalid-dimension": {
+          "code": "INVALID_DIMENSION",
+          "category": "validation",
+          "retryable": false,
+          "stage": "planning",
+          "message": "The requested dimension is not a valid dimension for the selected chart plan."
+        },
+        "invalid-measure": {
+          "code": "INVALID_MEASURE",
+          "category": "validation",
+          "retryable": false,
+          "stage": "planning",
+          "message": "The requested measure is not a valid measure for the selected chart plan."
+        }
+      }
+    },
+    "idempotent-completed-replay": {
+      "operationId": "operation-replay-cloud-001",
+      "status": "replayed",
+      "originalOperationId": "operation-normal-cloud-001",
+      "originalObjectId": "object-normal-cloud-001",
+      "sameSanitizedResult": true,
+      "adapterMutationInvoked": false
+    },
+    "conflicting-idempotency-key": {
+      "operationId": "operation-idempotency-conflict-001",
+      "status": "failed",
+      "error": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "category": "idempotency",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The idempotency key is already bound to a different actor, target, or plan."
+      }
+    },
+    "approval-binding-mismatches": {
+      "operationId": "operation-approval-mismatch-001",
+      "status": "failed",
+      "cases": {
+        "actor": {
+          "code": "APPROVAL_ACTOR_MISMATCH",
+          "category": "approval",
+          "retryable": false,
+          "stage": "apply",
+          "message": "The approval actor does not match the applying actor."
+        },
+        "target": {
+          "code": "APPROVAL_TARGET_MISMATCH",
+          "category": "approval",
+          "retryable": false,
+          "stage": "apply",
+          "message": "The approval target does not match the requested connection, app, or sheet."
+        },
+        "planHash": {
+          "code": "APPROVAL_PLAN_HASH_MISMATCH",
+          "category": "approval",
+          "retryable": false,
+          "stage": "apply",
+          "message": "The approval plan hash does not match the requested plan."
+        }
+      }
+    },
+    "approval-expiry": {
+      "operationId": "operation-approval-expiry-001",
+      "status": "failed",
+      "error": {
+        "code": "APPROVAL_EXPIRED",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The approval expired before the operation could be applied."
+      },
+      "adapterMutationInvoked": false
+    },
+    "approval-replay": {
+      "operationId": "operation-approval-replay-001",
+      "status": "failed",
+      "error": {
+        "code": "APPROVAL_REPLAYED",
+        "category": "approval",
+        "retryable": false,
+        "stage": "apply",
+        "message": "The single-use approval has already been consumed."
+      },
+      "adapterMutationInvoked": false
+    },
+    "capacity": {
+      "operationId": "operation-capacity-001",
+      "status": "failed",
+      "error": {
+        "code": "CAPACITY_EXHAUSTED",
+        "category": "capacity",
+        "retryable": true,
+        "stage": "preview",
+        "retryAfterSeconds": 30,
+        "message": "The target cannot accept another preview session within its capacity policy."
+      }
+    },
+    "transient": {
+      "operationId": "operation-transient-001",
+      "status": "failed",
+      "error": {
+        "code": "TRANSIENT_UNAVAILABLE",
+        "category": "transient",
+        "retryable": true,
+        "stage": "preview",
+        "retryAfterSeconds": 5,
+        "message": "The target session is temporarily unavailable."
+      }
+    },
+    "rate-limit": {
+      "operationId": "operation-rate-limit-001",
+      "status": "failed",
+      "error": {
+        "code": "RATE_LIMITED",
+        "category": "rate-limit",
+        "retryable": true,
+        "stage": "discovery",
+        "retryAfterSeconds": 15,
+        "message": "The target request limit was reached; retry after the supplied delay."
+      }
+    }
+  }
+}

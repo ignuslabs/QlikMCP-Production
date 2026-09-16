@@ -1,0 +1,38 @@
+{
+  "recordVersion": "1.0.0",
+  "recordType": "sanitized-operation-audit",
+  "operationId": "operation-replay-cloud-001",
+  "timestamp": "2026-08-04T12:03:00Z",
+  "correlationId": "corr-fixture-replay-001",
+  "requestingPrincipal": "fixture-analyst",
+  "hostClientId": "fixture-mcp-host",
+  "connectionAlias": "cloud-dev",
+  "platform": "cloud",
+  "target": {
+    "appId": "app-sales-cloud-dev",
+    "sheetId": "sheet-sales-overview-cloud-dev"
+  },
+  "effectiveQlikIdentityClass": "development-workload",
+  "intentVersion": "chart-intent-v1",
+  "compilerVersion": "fixture-compiler-v1",
+  "planHash": "sha256:fixture-normal-sales-by-region-v1",
+  "policyResult": "idempotent-result-replay",
+  "approvalState": "already-consumed",
+  "typedOutcome": {
+    "status": "replayed",
+    "category": "idempotency",
+    "originalOperationId": "operation-normal-cloud-001",
+    "originalObjectId": "object-normal-cloud-001"
+  },
+  "retryCount": 0,
+  "durationMilliseconds": 12,
+  "cleanupAttempted": false,
+  "cleanupOutcome": "not-required",
+  "createdObjectId": "object-normal-cloud-001",
+  "traceReference": "fixture-trace-replay-001",
+  "redaction": {
+    "rawPayloadsRemoved": true,
+    "sensitiveValuesRemoved": true,
+    "credentialMaterialPresent": false
+  }
+}

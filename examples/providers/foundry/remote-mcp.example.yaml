@@ -1,0 +1,24 @@
+# Illustrative deployment input; apply only after E1 publishes its HTTPS endpoint and identity values.
+tool:
+  type: mcp
+  name: qlik_ai_harness
+  server_url: ${QLIK_HARNESS_MCP_URL}
+  server_label: qlik-ai-harness
+authentication:
+  type: managed_identity
+  audience: ${QLIK_HARNESS_AUDIENCE}
+contract:
+  protocol: streamable-http
+  required_tools:
+    - qlik_list_apps
+    - qlik_get_app_catalog
+    - qlik_list_sheet_objects
+    - qlik_plan_visualization
+    - qlik_preview_visualization
+    - qlik_request_visualization_approval
+    - qlik_approve_visualization_request
+    - qlik_reject_visualization_request
+    - qlik_get_visualization_approval
+    - qlik_apply_visualization
+    - qlik_get_operation
+    - qlik_get_readiness
