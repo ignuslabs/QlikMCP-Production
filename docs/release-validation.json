@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-09-16T13:51:58.400828+00:00",
+  "verifiedAt": "2026-09-16T14:09:47.437782+00:00",
   "releaseCandidate": "0.4.1-rc.1",
   "scope": "Independent production repository; local source, package, and ARM64 fixture validation. No production deployment or live Qlik mutation.",
-  "sourceCommit": "6f9dd92bbca02d7f4f4d5be75bf5dff57a851376",
-  "sourceFileCount": 257,
-  "sourceManifestSha256": "11ff16c8e981ca1c9094834a4389fab3461d5068f7461b85d2187e48a45ba3eb",
+  "sourceCommit": "51e9b33ea35e5e333ec4855f5a5c29f641ef8c83",
+  "sourceFileCount": 271,
+  "sourceManifestSha256": "5bdee4029e7045c6daff84d94359ccf833c7c4678bb558689b7f6eca7d30c163",
   "sourceManifestEncoding": "UTF-8 sorted relative paths, each line SHA256 + two spaces + path + newline; excludes this validation record.",
   "toolchain": {
     "node": "22.23.2",
@@ -16,19 +16,20 @@
     "releaseCheck": {
       "status": "passed",
       "command": "npm run release:check",
-      "testsPassed": 830,
+      "testsPassed": 831,
       "testFilesPassed": 63,
-      "dependencyVulnerabilities": 0
+      "dependencyVulnerabilities": 0,
+      "source": "Fresh local Git clone of sourceCommit, with a clean npm ci --ignore-scripts install."
     },
     "finalDocumentationAndPackage": {
       "status": "passed",
-      "note": "After the aggregate gate, one Markdown hard break was replaced with a blank line; documentation and package checks were rerun.",
+      "note": "Validated from the fresh Git clone, including the root-anchored deployment ignore rule and its regression test.",
       "markdownLinks": 133,
       "markdownFiles": 40
     },
     "repositoryHygiene": {
       "status": "passed",
-      "textFilesScanned": 257
+      "textFilesScanned": 272
     },
     "stagedWhitespace": {
       "status": "passed",
@@ -42,8 +43,9 @@
     "containerBuild": {
       "status": "passed",
       "platform": "linux/arm64",
-      "imageId": "sha256:6964f817a6fffe09f644b673484c878c4dc814ad810db368e1d5d43dc9cc574d",
-      "baseImage": "node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5"
+      "imageId": "sha256:a859784621d80f991bfabf6f2704da6e3e66dab1c1ff51d660d36ae6d5fbc7cc",
+      "baseImage": "node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+      "source": "Fresh local Git clone of sourceCommit."
     },
     "containerSmoke": {
       "status": "passed",
@@ -65,8 +67,8 @@
       "originalGitStatusUnchanged": true
     },
     "hostedCI": {
-      "status": "not-run",
-      "reason": "No remote configured; Linux, Windows and ARM64 jobs are prepared."
+      "status": "not-run-at-local-validation",
+      "reason": "Private repository created; hosted CI starts on push. Consult GitHub Actions for current results."
     },
     "liveProductionAcceptance": {
       "status": "not-run",
@@ -76,15 +78,17 @@
   "package": {
     "filename": "qlik-ai-harness-bedrock-agentcore-0.4.1-rc.1.tgz",
     "files": 504,
-    "bytes": 846584,
-    "sha256": "556be06e3656e83408573237c43cf33629354cca493fffd092abe6f363944fbf",
+    "bytes": 846990,
+    "sha256": "f0fe848c2d04ec57d1168e8cb13a8a0488d98b53344193bc985e62928657cce6",
     "installedStdioSmoke": "passed",
     "fixtureAdapters": 2,
     "packageVersionMatchesMcpIdentity": true
   },
   "publishing": {
-    "remoteConfigured": false,
-    "pushed": false,
+    "remoteConfigured": true,
+    "repository": "https://github.com/ignuslabs/QlikMCP-Production",
+    "visibility": "private",
+    "pushVerification": "Performed separately after committing this validation record.",
     "npmPublished": false,
     "deployed": false
   },
@@ -101,14 +105,14 @@
     ".github/dependabot.yml": "e1c11a13bf637958aeebb63da4457f0b0ecbde12f7f09821d388736e931c10c3",
     ".github/pull_request_template.md": "f1ce0579190aa428d2a7152f190e71e8502ff66f89edf14095800c8dd8b387d4",
     ".github/workflows/ci.yml": "38b4e61d5d598af66f53908283d615bb43b104ece7266b99eedfc9cc6fe865f5",
-    ".gitignore": "e610b4ada05c74544e15d223aa817ed05105a3b015513a2b3e5351c573b4b6cd",
+    ".gitignore": "9ac7828988d00f526f34175c6beceff583fa679dc900feb6152836e9031befc0",
     ".npmrc": "0e9483bd98958116cc5c916794c300903addad711ce880e80f5495c0dd7e2273",
     ".nvmrc": "08062faf0d7a2d22f5d7933c50e975dd1527034275597be7c1b3b9fd2b9d079a",
     ".prettierignore": "fd1c01423c829848c7e1bccd157b958119d7820c5ea84ff75c50c1f4ece6e372",
     ".prettierrc.json": "c043a3fc85f17fe1d1e4198de8387969cb1d2bc6dd921f3c16444579fc797aa4",
     ".vscode/mcp.json": "72302a4b3993f137ae901505313cd84c49fb1fec534354632862c66c950bb4d7",
     "AGENTS.md": "093f9ed3534c2e211c6df1e29c6375c03ef0290358bcb7f084d598e14e2bf3b3",
-    "CHANGELOG.md": "ebd59ee541605b9f2e89061aa6909b1f5c25332df49cfd2e3262c3d853dcd249",
+    "CHANGELOG.md": "dfa8e4c9886fcd1c87ee12f5d7ff67ef32287874a3dc156a8a8bbb7ca4d3d3cd",
     "CONTRIBUTING.md": "c5ed94d9665c082bafb1698761103101b47fc763cd6ab3640cbd193704c693e2",
     "Dockerfile": "b7bf1d7840074a56db486ff33f8502220762c9903674f17fd4b20e767b5e380b",
     "README.md": "62b8b61007efb7ee66b48f84d17a6d6eb2e047bd3cde83e4632dc0a66e834be1",
@@ -163,6 +167,8 @@
     "infra/aws/main.parameters.example.json": "d21d9ccd1d5eae1ab797c4a2afec9a9670e505795daa2007f410fd014b56ed44",
     "package-lock.json": "8988ec00bc97d2bec59c3d6e9511bd2e9cf5b8d9a4c7228c5ce1108510082505",
     "package.json": "8d303aad025c4845b711bea511f862d6ef46f88f8cbf95c88fd300857528f278",
+    "scripts/agentcore/render-config.mjs": "3fa8d070950dba32c7b4a4bffd2c51e4e702183443c435e52d2fb6ea6439fc6a",
+    "scripts/agentcore/require-mmdsv2.mjs": "dbaf0469a083abc7021c01b58b8f2a0c41be19d7b33753f9e16b028ce7e2e0f6",
     "scripts/browser/generateQlikEmbedLocal.ts": "b5e3802a486ee4a541a86c4b3818b6d1d01722869f548a57e38153fb8f6660d1",
     "scripts/browser/qlik-g5-observer.js": "74b81dc809e12c5ccfef9c15f436887c815d3a5f118264849a4039066e208f8d",
     "scripts/browser/serveQlikEmbedLocal.ts": "f7cc3eeee8929ac27b4088fc19c618072b2f2c61f4c16c3463f05f405825a94b",
@@ -198,6 +204,14 @@
     "src/adapters/windows/qlikWindowsEngineSession.ts": "dbdbd387e3adb663792ca06b7e2a25341276203b53465f6df8deae2b2d4e9d5b",
     "src/adapters/windows/windowsAdapter.ts": "2f6bd947425926472affe864ed9dffe5116df8b54a641672446800d0fca3d12e",
     "src/adapters/windows/windowsRuntime.ts": "e9c30645518384789bc697ff86aafadf1046a6b7c09fc8990f0a8fd5031887e4",
+    "src/agentcore/runtime.ts": "9e106510e0ce57b6ee238e65c7040a92db688ebf97c7c09a2a9e34165a2f107c",
+    "src/agentcore/secrets.ts": "6841d42cd7f9c45dcb7fb39da3f934577d960c33f8a910ebcce114b2a2fc55c6",
+    "src/agentcore/state/dynamoApprovalStore.ts": "be0ad1013ecff48279a42395d2874283ea078c346f180647c989d2c57ba59b70",
+    "src/agentcore/state/dynamoClient.ts": "4ade2153c2d39efba071db1a10dd178b70472128efc2d2ea166f7ee48fea3bd5",
+    "src/agentcore/state/dynamoIdempotencyStore.ts": "4425744ab3f7283ef25afc892d019621987bd1ab722af03eaf7154975cb4cdfc",
+    "src/agentcore/state/dynamoOperationStore.ts": "c7ae9e89194e2270ffed593eb89f1ccb13050de4e036008c567961fff462497a",
+    "src/agentcore/state/dynamoPlanStore.ts": "6d019f57dd1450fb5c92058e998efa867e77a3f5553e97e2463ca17f68352673",
+    "src/agentcore/state/index.ts": "205544bb3898d14c73b5be852ad9375abb5efbf58874d72aac21b173c53a4876",
     "src/catalog/cardinality.ts": "786333c32b0080d80501bd0e045d09206927f46099cfd9e082ed76280bf766cd",
     "src/catalog/catalogTypes.ts": "4bad1a938b940ae98d322ac6b3cce9255a4ef03612595341e7d437b756fa85d0",
     "src/catalog/resolver.ts": "526eabf0af016fc8d900c12b5dc5cd60db2d85f958de1525fe982456f9aba496",
@@ -306,6 +320,10 @@
     "test/unit/adapters/windowsEngineSession.test.ts": "f0ec2c4147f919ef02645ca50719ef45ac82be10a3061daf0835e7a9bc5e17b8",
     "test/unit/adapters/windowsRuntime.test.ts": "dbe9f8a112d5391625f026374ff27a695c9b538c5ebcca8f2a6821776ac2d6b7",
     "test/unit/adapters/windowsSecretProvider.test.ts": "50a94129e4b914dfe7d5d61a610135592b172da49d36d5949e3e93b28b5f518b",
+    "test/unit/agentcore/deploymentConfig.test.ts": "3abeacb5bb329e5187cd5e25bef6f15f9081ad634ddbec06686fdfc6c766bae8",
+    "test/unit/agentcore/dynamoState.test.ts": "e680b28dd4a1f1e55fc155f46d0c482570934b86d59d82341a7acdd726e91829",
+    "test/unit/agentcore/requireMmdsv2.test.ts": "22b3fa8765f1abe4921f4ceacce2df7816c05d411b03a5022800e5a1966339d1",
+    "test/unit/agentcore/secrets.test.ts": "fe5127370116dd313075c7cdddf89d6c4b6b55dd2c5174d55c890af52edf7f23",
     "test/unit/compiler/chartTypeRegistry.test.ts": "8e41944456466b5c3ec52c7bf2753713a74887a9edefd0bffb343a4ea5db1187",
     "test/unit/compiler/compiler.test.ts": "257b280e4dfe3eb8f334481f9b27b5bc40e71f8730f320a4a06614962db60b6d",
     "test/unit/compiler/planHash.test.ts": "648ebdbf7f3e34683cde142ada7d09f9185e1548087ef52e4135681c24e4b7c1",
@@ -314,7 +332,7 @@
     "test/unit/config/configExamples.test.ts": "ecc70b66714b4acc2f3f91ccc4b130923a28e805e2648ec66d579529e8df1226",
     "test/unit/config/policyConfig.test.ts": "2a0763944835241a49134ed96e794224eab1d51f9d4973aeb61b146ddf6bb4d6",
     "test/unit/config/portableMcpLauncher.test.ts": "759649e01cd0bff5267af62072e708349e584dfccdc000f3ec327819142478d3",
-    "test/unit/config/releasePackaging.test.ts": "74be39d754b6d12a7bb7b4ccbaa4b5a16555304d7c2a2634ee484ae6f46512bb",
+    "test/unit/config/releasePackaging.test.ts": "a033a8482578fa88a0618ecced8e79be91b2d164f8e8b395a3e990bb5952230c",
     "test/unit/config/secureNodeStorageLauncher.test.ts": "f1b3cbc7b4d44e2391207efd49da6cfc95cb0c1e1d2f5160ee603be52d9ecbd6",
     "test/unit/domain/errors.test.ts": "65157a2d1ed969838e29eb68e67f00d068b78324e69e397b1897d316103d59cb",
     "test/unit/domain/redaction.test.ts": "ffb9c207dbb33406f6ec9f1fd8022e86fe6e2708ee3edda90d286235e13e1a0e",
