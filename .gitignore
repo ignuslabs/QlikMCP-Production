@@ -39,7 +39,7 @@ infra/aws/*.parameters.json
 *.key
 
 # Production repository excludes local deployment state and prior-run evidence.
-agentcore/
+/agentcore/
 artifacts/
 reports/
 docs/evidence/

@@ -82,6 +82,51 @@ describe('production release packaging', () => {
     expect(read('src/agentcore/runtime.ts')).toMatch(/^#!\/usr\/bin\/env node\n/u);
   });
 
+  it('keeps AgentCore source trackable while ignoring root deployment output', () => {
+    const directory = mkdtempSync(path.join(tmpdir(), 'qlik-git-ignore-'));
+    try {
+      copyFileSync(path.join(repositoryRoot, '.gitignore'), path.join(directory, '.gitignore'));
+      const initialized = spawnSync('git', ['init', '--quiet'], {
+        cwd: directory,
+        encoding: 'utf8',
+        timeout: 10_000,
+      });
+      expect(initialized.status, initialized.stderr).toBe(0);
+      const emptyGlobalIgnore = path.join(directory, '.git', 'empty-global-ignore');
+      writeFileSync(emptyGlobalIgnore, '');
+
+      const sourceFiles = [
+        'src/agentcore/runtime.ts',
+        'src/agentcore/state/index.ts',
+        'scripts/agentcore/render-config.mjs',
+        'test/unit/agentcore/dynamoState.test.ts',
+      ];
+      const deploymentFiles = ['agentcore/agentcore.json', 'agentcore/aws-targets.json'];
+      for (const relativePath of [...sourceFiles, ...deploymentFiles]) {
+        const absolutePath = path.join(directory, relativePath);
+        mkdirSync(path.dirname(absolutePath), { recursive: true });
+        writeFileSync(absolutePath, '{}');
+        const checked = spawnSync(
+          'git',
+          [
+            '-c',
+            `core.excludesFile=${emptyGlobalIgnore}`,
+            'check-ignore',
+            '--no-index',
+            '--',
+            relativePath,
+          ],
+          { cwd: directory, encoding: 'utf8', timeout: 10_000 },
+        );
+        const shouldBeIgnored = deploymentFiles.includes(relativePath);
+        expect(checked.status, `${relativePath}: ${checked.stderr}`).toBe(shouldBeIgnored ? 0 : 1);
+        expect(checked.stdout.trim()).toBe(shouldBeIgnored ? relativePath : '');
+      }
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
   it('only admits the inputs needed to build the runtime container', () => {
     const ignored = read('.dockerignore').split('\n');
     expect(ignored).toContain('**');

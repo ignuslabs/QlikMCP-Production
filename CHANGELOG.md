@@ -16,6 +16,9 @@ source behavior and do not certify a deployment.
   release metadata, CI, and the ARM64 container; use public-registry lockfile URLs.
 - Harden private-package contents and validate installation, startup, and relative
   documentation links from the packed artifact.
+- Keep generated AgentCore configuration ignored only at the repository root;
+  track runtime, deployment helpers, and tests, and verify a fresh Git checkout
+  before publishing the candidate.
 - Isolate default local workflow state under `QlikMCP-Production` on every host,
   retaining explicit path overrides and rejecting unsafe profile path segments.
 - Fix `script.apply` dataset-version rejection before and during preparation:
